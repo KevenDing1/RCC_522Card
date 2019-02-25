@@ -30,7 +30,7 @@ unsigned char SN[4];        //卡号
 unsigned char RFID[16];			//存放RFID 
 
 void DEV_Init(void);
-void ShowID(u16 x,u16 y,u8 *p，u16 charColor，u16 bkColor)；
+void ShowID(u16 x,u16 y,u8 *p,u16 charColor,u16 bkColor);
  int main(void)
  {	
   unsigned char status; 
@@ -48,10 +48,12 @@ void ShowID(u16 x,u16 y,u8 *p，u16 charColor，u16 bkColor)；
 	
 	if(status==MI_OK)
 			{
-				LCD_ShowString(0,30,200,16,16,"PcdAnticoll_MI_ERR");
+				LCD_ShowString(150,30,200,16,16,"PcdAnticoll_MI_OK");
 				status==MI_ERR;
 				LED1=1;
 				LED0=1;
+				LCD_ShowString(0,180,200,16,16,"The Card ID is:");
+				ShowID(0,200,SN,BLUE,WHITE);
 				
 			}
 }
@@ -72,7 +74,7 @@ void ShowID(u16 x,u16 y,u8 *p，u16 charColor，u16 bkColor)；
 *		charcolor 字符颜色
 *		bkcolor   背景颜色
 ***************************************/
-void ShowID(u16 x,u16 y,u8 *p，u16 charColor，u16 bkColor)
+void ShowID(u16 x,u16 y,u8 *p,u16 charColor,u16 bkColor)
 {
 	u8 num[9];
 	u8 i;
@@ -85,10 +87,17 @@ void ShowID(u16 x,u16 y,u8 *p，u16 charColor，u16 bkColor)
 	*'7'即7的ascll码为55，A的ascll码为65
 	**************************************/
 	for(i=0;i<4;i++)
-	{
-		num[i*2]=p[i]/16;
-		num[i*2]>9?(num[i*2]+='7'):(num[i*2]+='0');
-		num[i*2+1]=p[i]%16;
-		num[i*2+1]>9?(num[i*2+1]+='7'):(num[i*2+1]+='0');
-	}
+		{
+			num[i*2]=p[i]/16;
+			num[i*2]>9?(num[i*2]+='7'):(num[i*2]+='0');
+			num[i*2+1]=p[i]%16;
+			num[i*2+1]>9?(num[i*2+1]+='7'):(num[i*2+1]+='0');
+		}
+	num[8]=0;
+	LCD_ShowString(x,y,200,16,16,"The Card ID is:");
+	for(i=0;i<4;i++)
+		{
+			LCD_ShowNum(x+i*16,y+16,num[i],2,16);
+		}
+		
 }
